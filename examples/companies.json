@@ -1,0 +1,42 @@
+[
+  {
+    "name": "Nubank",
+    "url": "https://nubank.com.br",
+    "linkedin": "https://www.linkedin.com/company/nubank"
+  },
+  {
+    "name": "Spotify",
+    "url": "https://spotify.com",
+    "linkedin": "https://www.linkedin.com/company/spotify"
+  },
+  {
+    "name": "Stripe",
+    "url": "https://stripe.com",
+    "linkedin": null
+  },
+  {
+    "name": "iFood",
+    "url": null,
+    "linkedin": "https://www.linkedin.com/company/ifood-"
+  },
+  {
+    "name": "Vercel",
+    "url": "https://vercel.com",
+    "linkedin": "https://www.linkedin.com/company/vercel"
+  },
+  {
+    "name": "Patria Investments",
+    "url": "https://www.patria.com/",
+    "linkedin": "https://www.linkedin.com/company/patria-investments"
+  },
+  {
+    "name": "Petlove",
+    "url": "https://www.petlove.com.br/",
+    "linkedin": "https://www.linkedin.com/company/petlove"
+  },
+  {
+    "name": "EnterAI",
+    "url": "https://www.getenter.ai/",
+    "linkedin": "https://www.linkedin.com/company/getenter/"
+  }
+]
