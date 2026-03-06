@@ -3,13 +3,11 @@
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import pytest
 import requests
 from bs4 import BeautifulSoup
 
 from logo_scraper.models import Logo, LogoSource
 from logo_scraper.scraper.website import WebsiteScraper, scrape_website_logos
-
 
 # ---------------------------------------------------------------------------
 # HTML fixtures

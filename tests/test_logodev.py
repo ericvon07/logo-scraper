@@ -9,7 +9,7 @@ import pytest
 import requests
 from PIL import Image
 
-from logo_scraper.models import Logo, LogoSource
+from logo_scraper.models import LogoSource
 from logo_scraper.scraper.logodev import LogoDevScraper, _build_domain_variants, scrape_logodev
 
 # ---------------------------------------------------------------------------

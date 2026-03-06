@@ -3,7 +3,6 @@
 import logging
 import os
 from pathlib import Path
-from urllib.parse import urlparse
 
 import requests
 from dotenv import load_dotenv

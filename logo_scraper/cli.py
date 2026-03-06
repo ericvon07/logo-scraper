@@ -2,7 +2,8 @@
 
 import argparse
 import sys
-from pathlib import Path
+
+from logo_scraper.orchestrator import fetch_logos
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -11,33 +12,18 @@ def build_parser() -> argparse.ArgumentParser:
         description="Fetch and download company logos from multiple sources.",
     )
 
-    parser.add_argument("company", help="Company name (used for output filenames).")
-    parser.add_argument("domain", help='Company domain, e.g. "stripe.com".')
-
+    parser.add_argument("--name", required=True, help="Company name (e.g. 'Nubank').")
+    parser.add_argument("--url", required=True, help="Company website URL (e.g. 'https://nubank.com.br').")
+    parser.add_argument("--linkedin", default=None, help="LinkedIn company page URL (optional fallback).")
     parser.add_argument(
-        "--output-dir",
-        "-o",
-        type=Path,
-        default=Path("logos"),
-        help="Directory where logos will be saved (default: ./logos).",
+        "--output",
+        default="./output",
+        help="Directory where logos will be saved (default: ./output).",
     )
     parser.add_argument(
-        "--sources",
-        "-s",
-        nargs="+",
-        choices=["website", "logodev", "linkedin"],
-        default=["website", "logodev", "linkedin"],
-        help="Sources to query (default: all).",
-    )
-    parser.add_argument(
-        "--linkedin-slug",
-        help="LinkedIn company slug (required when 'linkedin' is in --sources).",
-    )
-    parser.add_argument(
-        "--timeout",
-        type=int,
-        default=10,
-        help="HTTP request timeout in seconds (default: 10).",
+        "--logodev-api-key",
+        default=None,
+        help="logo.dev API key (falls back to LOGODEV_API_KEY env var).",
     )
 
     return parser
@@ -47,15 +33,39 @@ def main(argv: list[str] | None = None) -> int:
     """Entry point for the CLI.
 
     Returns:
-        Exit code (0 = success, non-zero = error).
+        Exit code (0 = success, 1 = no logos found).
     """
     parser = build_parser()
     args = parser.parse_args(argv)
 
-    if "linkedin" in args.sources and not args.linkedin_slug:
-        parser.error("--linkedin-slug is required when 'linkedin' is in --sources.")
+    result = fetch_logos(
+        company_name=args.name,
+        website_url=args.url,
+        linkedin_url=args.linkedin,
+        output_dir=args.output,
+        logodev_api_key=args.logodev_api_key,
+    )
 
-    raise NotImplementedError("CLI execution not yet implemented.")
+    # ------------------------------------------------------------------
+    # Summary
+    # ------------------------------------------------------------------
+    if result.success:
+        sources = sorted({logo.source.value for logo in result.logos})
+        print(f"Found {len(result.logos)} logo(s) for '{result.company}' from: {', '.join(sources)}")
+        for logo in result.logos:
+            if logo.local_path:
+                dims = f" ({logo.width}x{logo.height})" if logo.width and logo.height else ""
+                fmt = f" [{logo.format}]" if logo.format else ""
+                print(f"  {logo.local_path}{dims}{fmt}")
+            else:
+                print(f"  {logo.url}  (not downloaded)")
+        return 0
+    else:
+        print(f"No logos found for '{result.company}'.")
+        if result.errors:
+            for err in result.errors:
+                print(f"  Error: {err}")
+        return 1
 
 
 if __name__ == "__main__":
