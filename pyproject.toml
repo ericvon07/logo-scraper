@@ -7,6 +7,8 @@ name = "logo-scraper"
 version = "0.1.0"
 description = "Fetch and download company logos from websites, logo.dev, and LinkedIn."
 readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "Eric von Uhlendorff" }]
 requires-python = ">=3.10"
 dependencies = [
     "requests>=2.31",
@@ -17,6 +19,9 @@ dependencies = [
 
 [project.scripts]
 logo-scraper = "logo_scraper.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["logo_scraper"]
 
 [project.optional-dependencies]
 dev = [

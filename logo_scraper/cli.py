@@ -5,6 +5,7 @@ import json
 import sys
 from pathlib import Path
 
+from logo_scraper.models import ScrapeResult
 from logo_scraper.orchestrator import fetch_logos
 from logo_scraper.utils import sanitize_filename
 
@@ -17,7 +18,7 @@ def _slugify(name: str) -> str:
     return sanitize_filename(name.lower().replace(" ", "_"))
 
 
-def _print_single_summary(result) -> None:
+def _print_single_summary(result: ScrapeResult) -> None:
     """Print per-logo details for a single-company run."""
     if result.success:
         sources = sorted({logo.source.value for logo in result.logos})
@@ -105,7 +106,7 @@ def build_parser() -> argparse.ArgumentParser:
 # Modes
 # ---------------------------------------------------------------------------
 
-def _run_single(args) -> int:
+def _run_single(args: argparse.Namespace) -> int:
     """Single-company mode."""
     result = fetch_logos(
         company_name=args.name,
@@ -118,7 +119,7 @@ def _run_single(args) -> int:
     return 0 if result.success else 1
 
 
-def _run_batch(args) -> int:
+def _run_batch(args: argparse.Namespace) -> int:
     """Batch mode: read companies from a JSON file."""
     file_path = Path(args.from_file)
     if not file_path.exists():

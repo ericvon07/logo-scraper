@@ -43,4 +43,5 @@ htmlcov/
 .DS_Store
 
 # Output
+output/
 logos/
