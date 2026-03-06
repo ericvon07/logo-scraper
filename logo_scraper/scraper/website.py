@@ -29,14 +29,7 @@ _FAVICON_RELS = {"icon", "shortcut icon", "apple-touch-icon"}
 
 
 class WebsiteScraper:
-    """Scrape logo candidates from a website's HTML.
-
-    Strategy (in order):
-    1. ``<link rel="icon">`` / ``<link rel="shortcut icon">`` / ``<link rel="apple-touch-icon">``
-    2. ``<meta property="og:image">`` / ``<meta name="og:image">``
-    3. ``<meta name="twitter:image">``
-    4. ``<img>`` tags whose src/alt hint at a logo (e.g. alt contains "logo")
-    """
+    """Scrape logo candidates from a website's HTML (favicon, og:image, twitter:image, img tags)."""
 
     def __init__(self, timeout: int = 10) -> None:
         self.timeout = timeout
@@ -48,15 +41,7 @@ class WebsiteScraper:
     # ------------------------------------------------------------------
 
     def fetch_logos(self, company: str, url: str) -> list[Logo]:
-        """Return a list of :class:`~logo_scraper.models.Logo` candidates found on *url*.
-
-        Args:
-            company: Human-readable company name (used for metadata).
-            url: Full URL of the company website (e.g. ``"https://example.com"``).
-
-        Returns:
-            Possibly-empty list of Logo objects (not yet downloaded).
-        """
+        """Return logo candidates found on url (not yet downloaded)."""
         logger.info("Fetching logos from %s", url)
         try:
             soup = self._get_html(url)
@@ -154,16 +139,7 @@ class WebsiteScraper:
 # ---------------------------------------------------------------------------
 
 def scrape_website_logos(url: str, output_dir: Path) -> list[Logo]:
-    """Scrape, download, and validate logos from *url*, saving them to *output_dir*.
-
-    Args:
-        url: Full URL of the target website.
-        output_dir: Directory where logo files will be saved.
-
-    Returns:
-        List of :class:`~logo_scraper.models.Logo` objects that were
-        successfully downloaded and validated.
-    """
+    """Scrape, download, and validate logos from url, saving them to output_dir."""
     domain = domain_from_url(url)
     company = domain.split(".")[0]
     scraper = WebsiteScraper()

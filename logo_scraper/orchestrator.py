@@ -19,26 +19,7 @@ def fetch_logos(
     output_dir: str = "./output",
     logodev_api_key: str | None = None,
 ) -> ScrapeResult:
-    """Fetch logos for a company, trying sources in priority order.
-
-    Priority (early return — stops at the first source that yields a logo):
-    1. logo.dev  (domain extracted from *website_url*, or ``{company_name}.com``)
-    2. Company website HTML scraping (requires *website_url*)
-    3. LinkedIn  (requires *linkedin_url*)
-
-    Args:
-        company_name: Human-readable company name.
-        website_url:  Company website URL (used for logo.dev domain lookup and
-                      direct HTML scraping).
-        linkedin_url: LinkedIn company page URL (used as last-resort fallback).
-        output_dir:   Directory where downloaded logos will be saved.
-        logodev_api_key: logo.dev API key. Falls back to ``LOGODEV_API_KEY``
-                      environment variable when *None*.
-
-    Returns:
-        :class:`~logo_scraper.models.ScrapeResult` with all logos found and
-        the source that succeeded (logos carry their own ``source`` attribute).
-    """
+    """Fetch logos for a company, trying logo.dev → website → LinkedIn in that order."""
     out = Path(output_dir)
     out.mkdir(parents=True, exist_ok=True)
 

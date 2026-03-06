@@ -37,10 +37,7 @@ def _print_single_summary(result: ScrapeResult) -> None:
 
 
 def _print_batch_summary(rows: list[dict]) -> None:
-    """Print a formatted table summarising a batch run.
-
-    Each row dict has keys: name, logos, sources.
-    """
+    """Print a formatted table summarising a batch run."""
     col_name = max(len(r["name"]) for r in rows)
     col_name = max(col_name, len("Company"))
     col_logos = max(len(str(r["logos"])) for r in rows)
@@ -174,11 +171,7 @@ def _run_batch(args: argparse.Namespace) -> int:
 # ---------------------------------------------------------------------------
 
 def main(argv: list[str] | None = None) -> int:
-    """Entry point for the CLI.
-
-    Returns:
-        Exit code (0 = success, 1 = no logos found, 2 = input error).
-    """
+    """Entry point for the CLI."""
     parser = build_parser()
     args = parser.parse_args(argv)
 

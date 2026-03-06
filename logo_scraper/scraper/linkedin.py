@@ -53,14 +53,7 @@ _BLOCKED_STATUS_CODES = {403, 999}
 
 
 class LinkedInScraper:
-    """Scrape the company logo from a LinkedIn public company page.
-
-    Note: LinkedIn heavily rate-limits and blocks automated scraping.
-    This scraper uses only the public (unauthenticated) HTML and relies
-    on ``<meta>`` / ``<img>`` tags and JSON-LD data present in the initial HTML.
-
-    For production use, consider the LinkedIn Marketing API instead.
-    """
+    """Scrape the company logo from a LinkedIn public company page (unauthenticated HTML only)."""
 
     _BASE_URL = "https://www.linkedin.com/company"
 
@@ -74,17 +67,7 @@ class LinkedInScraper:
     # ------------------------------------------------------------------
 
     def fetch_logos(self, company: str, linkedin_url: str) -> list[Logo]:
-        """Return Logo objects scraped from a LinkedIn company page URL.
-
-        Args:
-            company: Human-readable company name.
-            linkedin_url: Full LinkedIn company URL, e.g.
-                ``"https://www.linkedin.com/company/stripe"``.
-
-        Returns:
-            List of Logo objects (not yet downloaded). Empty list if
-            LinkedIn blocks the request or no logo is found.
-        """
+        """Return logo candidates scraped from a LinkedIn company page. Empty list if blocked."""
         logger.info("Fetching LinkedIn page: %s", linkedin_url)
 
         try:
@@ -127,12 +110,7 @@ class LinkedInScraper:
     # ------------------------------------------------------------------
 
     def _get_html(self, url: str) -> BeautifulSoup:
-        """Fetch *url* with a polite delay and return a parsed BeautifulSoup tree.
-
-        Raises:
-            _LinkedInBlocked: If LinkedIn responds with a block/redirect signal.
-            requests.RequestException: On other network errors.
-        """
+        """Fetch url with a polite delay and return a parsed BeautifulSoup tree."""
         time.sleep(_REQUEST_DELAY_SECONDS)
 
         try:
@@ -236,17 +214,7 @@ def scrape_linkedin_logo(linkedin_url: str, output_dir: Path) -> list[Logo]:
     """Scrape, download, and validate logos from a LinkedIn company page.
 
     NOTE: Esta é a fonte menos confiável — o LinkedIn bloqueia scraping
-    agressivamente. Em caso de bloqueio (403, redirect para login), retorna
-    lista vazia sem lançar exceção.
-
-    Args:
-        linkedin_url: Full LinkedIn company URL,
-            e.g. ``"https://www.linkedin.com/company/stripe"``.
-        output_dir: Directory where logo files will be saved.
-
-    Returns:
-        List of :class:`~logo_scraper.models.Logo` objects that were
-        successfully downloaded and validated. Empty list on block or error.
+    agressivamente. Em caso de bloqueio, retorna lista vazia sem lançar exceção.
     """
     parsed = urlparse(linkedin_url)
     # Derive a company slug from the URL path: /company/stripe -> "stripe"

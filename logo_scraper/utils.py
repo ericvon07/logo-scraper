@@ -7,20 +7,7 @@ from PIL import Image, UnidentifiedImageError
 
 
 def download_image(url: str, dest: Path, timeout: int = 10) -> Path:
-    """Download an image from *url* and save it to *dest*.
-
-    Args:
-        url: Public URL of the image.
-        dest: Destination file path (including filename).
-        timeout: Request timeout in seconds.
-
-    Returns:
-        The path where the image was saved.
-
-    Raises:
-        requests.HTTPError: If the server returns an error status.
-        ValueError: If the response body is not a valid image.
-    """
+    """Download an image from url and save it to dest."""
     dest.parent.mkdir(parents=True, exist_ok=True)
 
     response = requests.get(url, timeout=timeout, stream=True)
@@ -36,10 +23,7 @@ def download_image(url: str, dest: Path, timeout: int = 10) -> Path:
 
 
 def is_valid_image(path: Path) -> bool:
-    """Return True if *path* points to a readable image file.
-
-    Uses Pillow for raster formats; SVG files are accepted by extension only.
-    """
+    """Return True if path points to a readable image. SVG files are accepted by extension only."""
     if path.suffix.lower() == ".svg":
         return path.exists() and path.stat().st_size > 0
 
@@ -80,12 +64,7 @@ def sanitize_filename(name: str) -> str:
 
 
 def domain_from_url(url: str) -> str:
-    """Extract the bare domain (without scheme/path) from a URL.
-
-    Example:
-        >>> domain_from_url("https://www.example.com/about")
-        'example.com'
-    """
+    """Extract the bare domain (without scheme/path) from a URL."""
     from urllib.parse import urlparse
 
     parsed = urlparse(url if "://" in url else f"https://{url}")

@@ -24,13 +24,7 @@ _BASE_URL = "https://img.logo.dev"
 
 
 class LogoDevScraper:
-    """Fetch logos via the logo.dev API.
-
-    Requires a valid API key in the ``LOGODEV_API_KEY`` environment variable
-    (or ``.env`` file).
-
-    Docs: https://www.logo.dev/docs
-    """
+    """Fetch logos via the logo.dev API. Requires LOGODEV_API_KEY in env or .env."""
 
     def __init__(self, api_key: str | None = None) -> None:
         self.api_key = api_key or os.getenv("LOGODEV_API_KEY")
@@ -46,16 +40,7 @@ class LogoDevScraper:
     # ------------------------------------------------------------------
 
     def fetch_logos(self, company: str, domain: str) -> list[Logo]:
-        """Return Logo objects for *domain* using the logo.dev API.
-
-        Args:
-            company: Human-readable company name.
-            domain: Bare domain, e.g. ``"stripe.com"``.
-
-        Returns:
-            List with one Logo entry when the API returns a valid image,
-            empty list otherwise.
-        """
+        """Fetch logos for domain using the logo.dev API."""
         url = self._build_url(domain)
         logger.info("Checking logo.dev for %s: %s", domain, url)
 
@@ -71,13 +56,7 @@ class LogoDevScraper:
     # ------------------------------------------------------------------
 
     def _build_url(self, domain: str, size: int = 200, format: str = "png") -> str:
-        """Build the logo.dev image URL for *domain*.
-
-        Args:
-            domain: e.g. ``"stripe.com"``
-            size: Desired image size in pixels.
-            format: ``"png"`` or ``"svg"``.
-        """
+        """Build the logo.dev image URL for domain."""
         return f"{_BASE_URL}/{domain}?token={self.api_key}&size={size}&format={format}"
 
     def _is_available(self, url: str) -> bool:
@@ -95,23 +74,7 @@ class LogoDevScraper:
 # ---------------------------------------------------------------------------
 
 def scrape_logodev(domain: str, output_dir: Path, api_key: str | None = None) -> list[Logo]:
-    """Fetch and save logos from logo.dev for *domain*.
-
-    Tries the following domain variants in order:
-    1. The domain as provided (after extracting from full URL if needed).
-    2. With ``www.`` prefix (if not already present).
-    3. Without ``www.`` prefix (if present).
-    4. ``{name}.com`` fallback when *domain* looks like a company name (no dot).
-
-    Args:
-        domain: A bare domain (``"google.com"``), full URL, or company name.
-        output_dir: Directory where downloaded logo files will be saved.
-        api_key: logo.dev API key. Falls back to ``LOGODEV_API_KEY`` env var.
-
-    Returns:
-        List of :class:`~logo_scraper.models.Logo` objects that were
-        successfully downloaded and validated.
-    """
+    """Fetch and save logos from logo.dev for domain, trying common domain variants."""
     scraper = LogoDevScraper(api_key=api_key)
 
     # Normalise input to a bare domain
